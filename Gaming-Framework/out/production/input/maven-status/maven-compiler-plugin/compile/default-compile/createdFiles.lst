@@ -1,0 +1,6 @@
+com\koerber\training\inputframework\input\Data.class
+com\koerber\training\inputframework\number\Util.class
+com\koerber\training\inputframework\input\DataInteger.class
+com\koerber\training\inputframework\input\DataNumber.class
+com\koerber\training\inputframework\input\DataText.class
+com\koerber\training\inputframework\input\Input.class
