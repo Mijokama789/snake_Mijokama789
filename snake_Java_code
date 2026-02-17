@@ -1,0 +1,123 @@
+
+package com.koerber.training.template;
+
+import java.awt.*;
+import java.util.LinkedList;
+import java.util.Random;
+
+import com.koerber.training.windowframework.Direction;
+import com.koerber.training.windowframework.GameActions;
+import com.koerber.training.windowframework.GameWindow;
+import com.koerber.training.windowframework.MouseButton;
+
+/**
+ * An example for the use of the GameWindow and the WindowFramework.
+ * Your can adopt the functions and methods accordingly.
+ *
+ * @author simon_oelerich
+ * @company Körber Pharma Software GmbH
+ * @created 28.07.2021
+ * @since windowframework 1.0
+ */
+public class Showcase implements GameActions {
+
+    protected final GameWindow gameWindow;
+    int width = 20;
+    int length = 30;
+    Random random = new Random();
+    Point snake = new Point(1, 1);
+    Point apple = new Point(random.nextInt(width), random.nextInt(length));
+    Direction playerDirection = Direction.DOWN;
+    LinkedList<Point> snakeList = new LinkedList<>();
+
+    // entrypoint of application
+    public Showcase() {
+        this.gameWindow = new GameWindow("Showcase", width, length, 20, Color.GRAY, this);
+        this.gameWindow.setAllColor(Color.WHITE);
+        snakeList.add(snake);
+        this.gameWindow.setColorAt(Color.green, 1, 1);
+        apples();
+        this.gameWindow.startGameLoop(200);
+    }
+
+    // main function to start application
+    public static void main(String[] args) {
+        new Showcase();
+    }
+
+    public void apples() {
+        apple = new Point(random.nextInt(width), random.nextInt(length));
+        this.gameWindow.setColorAt(Color.red, apple.x, apple.y);
+    }
+
+
+
+    // draw red point where mouse left-clicked, a blue point for right click and a yellow point for middle click
+    @Override
+    public void onGridClicked(int x, int y, MouseButton mouseClick) {
+    }
+
+    // when arrow key is pressed
+    @Override
+    public void onArrowPressed(Direction dir) {
+        if (dir == Direction.LEFT) {
+            playerDirection = Direction.LEFT;
+        } else if (dir == Direction.UP) {
+            playerDirection = Direction.UP;
+        } else if (dir == Direction.RIGHT) {
+            playerDirection = Direction.RIGHT;
+        } else if (dir == Direction.DOWN) {
+            playerDirection = Direction.DOWN;
+        }
+
+        System.out.println("Arrow: " + dir);
+    }
+
+    // when mouse button is pressed
+    @Override
+    public void onMousePressed(MouseButton mouseClick) {
+
+    }
+
+    // Repeats every game loop tick
+    // The game loop is off by default, enable it with this.gameWindow.startGameLoop(<tickspeed>)
+    @Override
+    public void onGameLoopTick() {
+        if (playerDirection == Direction.LEFT) {
+            snake.x = snake.x - 1;
+            snakeList.addFirst(new Point(snake.x, snake.y));
+        } else if (playerDirection == Direction.UP) {
+            snake.y = snake.y - 1;
+            snakeList.addFirst(new Point(snake.x, snake.y));
+        } else if (playerDirection == Direction.RIGHT) {
+            snake.x = snake.x + 1;
+            snakeList.addFirst(new Point(snake.x, snake.y));
+        } else if (playerDirection == Direction.DOWN) {
+            snake.y = snake.y + 1;
+            snakeList.addFirst(new Point(snake.x, snake.y));
+        }
+
+        this.gameWindow.setAllColor(Color.WHITE);
+
+        this.gameWindow.setColorAt(Color.RED, apple.x, apple.y);
+
+
+        for (Point p : snakeList) {
+            this.gameWindow.setColorAt(Color.GREEN, p.x, p.y);
+        }
+
+
+        System.out.println(snakeList);
+        if (this.gameWindow.getFieldAt(snake.x, snake.y) == this.gameWindow.getFieldAt(apple.x, apple.y)) {
+            this.gameWindow.setColorAt(Color.white, apple.x, apple.y);
+            apples();
+        }else{
+
+            if (!snakeList.isEmpty()) {
+                snakeList.removeLast();
+            }
+
+        }
+        }
+    }
+
