@@ -46,43 +46,39 @@ public class Showcase implements GameActions {
     Point apple = new Point(random.nextInt(width), random.nextInt(length));
     Direction playerDirection = Direction.DOWN;
     LinkedList<Point> snakeList = new LinkedList<>();
-
+    OpcClient server;
+    OpcDevice fadecandy;
+    PixelStrip strip1;
     // entrypoint of application
     public Showcase() {
+        this.server = new OpcClient("localhost", 7890);
+        this.fadecandy = server.addDevice();
+        this.strip1 = fadecandy.addPixelStrip(0, 50);
         this.gameWindow = new GameWindow("Showcase", width, length, 20, Color.GRAY, this);
         this.gameWindow.setAllColor(Color.WHITE);
         snakeList.add(snake);
         this.gameWindow.setColorAt(Color.green, 1, 1);
+        strip1.setPixelColor(led(1,1), makeColor(139, 34, 34));
         apples();
         this.gameWindow.startGameLoop(500);
+        //this.server.show();
     }
 
     // main function to start application
     public static void main(String[] args) throws InterruptedException {
-        OpcClient server = new OpcClient("localhost", 7890);
-        OpcDevice fadeCandy = server.addDevice();
-        PixelStrip strip1 = fadeCandy.addPixelStrip(0, 50);
-        System.out.println(server.getConfig());
-        server.clear();
-        server.show();
+        Showcase showcase = new Showcase();
 
-        for (int i = 0; i < 1000; i++) {
-            strip1.setPixelColor(led(0,0), makeColor(256, 200, 200));
-            server.show();
-            //server.animate();
-            Thread.sleep(100);
-        }
+        showcase.server.show();
+        showcase.server.clear();
+        showcase.server.close();
 
-        server.clear();
-        server.show();
-        server.close();
 
-        new Showcase();
     }
 
     public void apples() {
         apple = new Point(random.nextInt(width), random.nextInt(length));
         this.gameWindow.setColorAt(Color.red, apple.x, apple.y);
+        strip1.setPixelColor(led(apple.x,apple.y), makeColor(0, 255, 0));
     }
 
 
@@ -121,34 +117,62 @@ public class Showcase implements GameActions {
     public void onGameLoopTick() {
 
         if (playerDirection == Direction.LEFT) {
-            snake.x = snake.x - 1;
-            snakeList.addFirst(new Point(snake.x, snake.y));
+            if (snake.x == 0){
+                snake.x = 9;
+            }
+            else {
+                snake.x = snake.x - 1;
+                snakeList.addFirst(new Point(snake.x, snake.y));
+                strip1.setPixelColor(led(snake.x, snake.y), makeColor(139, 34, 34));
+            }
         } else if (playerDirection == Direction.UP) {
-            snake.y = snake.y - 1;
-            snakeList.addFirst(new Point(snake.x, snake.y));
+            if (snake.y == 0){
+                snake.y = 4;
+            }
+            else {
+                snake.y = snake.y - 1;
+                snakeList.addFirst(new Point(snake.x, snake.y));
+                strip1.setPixelColor(led(snake.x, snake.y), makeColor(139, 34, 34));
+            }
         } else if (playerDirection == Direction.RIGHT) {
-            snake.x = snake.x + 1;
-            snakeList.addFirst(new Point(snake.x, snake.y));
+            if (snake.x == 9){
+                snake.x = 0;
+            }
+            else {
+                snake.x = snake.x + 1;
+                snakeList.addFirst(new Point(snake.x, snake.y));
+                strip1.setPixelColor(led(snake.x, snake.y), makeColor(139, 34, 34));
+            }
         } else if (playerDirection == Direction.DOWN) {
-            snake.y = snake.y + 1;
-            snakeList.addFirst(new Point(snake.x, snake.y));
+            if (snake.y == 4) {
+                snake.y = 0;
+            } else {
+                snake.y = snake.y + 1;
+                snakeList.addFirst(new Point(snake.x, snake.y));
+                strip1.setPixelColor(led(snake.x, snake.y), makeColor(139, 34, 34));
+            }
         }
 
-        led(snake.x, snake.y);
+        //System.out.println(led(snake.x, snake.y));
 
         this.gameWindow.setAllColor(Color.WHITE);
+        strip1.clear();
 
         this.gameWindow.setColorAt(Color.RED, apple.x, apple.y);
-
+        strip1.setPixelColor(led(apple.x,apple.y), makeColor(0, 255, 0));
+        server.show();
 
         for (Point p : snakeList) {
             this.gameWindow.setColorAt(Color.GREEN, p.x, p.y);
+            strip1.setPixelColor(led(p.x, p.y), makeColor( 139, 34, 34));
+            server.show();
         }
 
 
-        System.out.println(snakeList);
+//        System.out.println(snakeList);
         if (this.gameWindow.getFieldAt(snake.x, snake.y) == this.gameWindow.getFieldAt(apple.x, apple.y)) {
             this.gameWindow.setColorAt(Color.white, apple.x, apple.y);
+            strip1.setPixelColor(led(apple.x, apple.y), makeColor(0, 0, 0));
             apples();
         } else{
 
@@ -177,8 +201,6 @@ public class Showcase implements GameActions {
         else if (y == 4){
             led = x;
         }
-
-
         return led;
    }
 
