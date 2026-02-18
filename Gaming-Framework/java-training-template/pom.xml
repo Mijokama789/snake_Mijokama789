@@ -17,53 +17,61 @@
         <maven.compiler.source>1.17</maven.compiler.source>
         <maven.compiler.target>1.17</maven.compiler.target>
     </properties>
-<!--
-    <repositories>
-        <repository>
-            <id>gitea.ausbildung.werum.net</id>
-            <name>Gitea</name>
-            <url>https://gitea.ausbildung.werum.net/api/packages/koerber-pharma-software/maven</url>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>gitea.ausbildung.werum.net</id>
-            <url>https://gitea.ausbildung.werum.net/api/packages/koerber-pharma-software/maven</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-        <snapshotRepository>
-            <id>gitea.ausbildung.werum.net</id>
-            <url>https://gitea.ausbildung.werum.net/api/packages/koerber-pharma-software/maven</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </snapshotRepository>
-    </distributionManagement>
-
     <dependencies>
-        <dependency>
-            <groupId>com.koerber.training</groupId>
-            <artifactId>inputframework</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>com.koerber.training</groupId>
             <artifactId>windowframework</artifactId>
             <version>0.0.2-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
+    <!--
+        <repositories>
+            <repository>
+                <id>gitea.ausbildung.werum.net</id>
+                <name>Gitea</name>
+                <url>https://gitea.ausbildung.werum.net/api/packages/koerber-pharma-software/maven</url>
+            </repository>
+        </repositories>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-            </plugin>
-        </plugins>
-    </build>
--->
+        <distributionManagement>
+            <repository>
+                <id>gitea.ausbildung.werum.net</id>
+                <url>https://gitea.ausbildung.werum.net/api/packages/koerber-pharma-software/maven</url>
+                <releases>
+                    <enabled>true</enabled>
+                </releases>
+            </repository>
+            <snapshotRepository>
+                <id>gitea.ausbildung.werum.net</id>
+                <url>https://gitea.ausbildung.werum.net/api/packages/koerber-pharma-software/maven</url>
+                <snapshots>
+                    <enabled>true</enabled>
+                </snapshots>
+            </snapshotRepository>
+        </distributionManagement>
+
+        <dependencies>
+            <dependency>
+                <groupId>com.koerber.training</groupId>
+                <artifactId>inputframework</artifactId>
+                <version>0.0.2-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.koerber.training</groupId>
+                <artifactId>windowframework</artifactId>
+                <version>0.0.2-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
+                </plugin>
+            </plugins>
+        </build>
+    -->
 </project>

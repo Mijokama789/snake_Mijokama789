@@ -25,6 +25,9 @@ import com.koerber.training.windowframework.Direction;
 import com.koerber.training.windowframework.GameActions;
 import com.koerber.training.windowframework.GameWindow;
 import com.koerber.training.windowframework.MouseButton;
+import fadecandy.OpcClient;
+import fadecandy.OpcDevice;
+import fadecandy.PixelStrip;
 
 /**
  * An example for the use of the GameWindow and the WindowFramework.
@@ -38,8 +41,8 @@ import com.koerber.training.windowframework.MouseButton;
 public class Showcase implements GameActions {
 
     protected final GameWindow gameWindow;
-    int width = 20;
-    int length = 30;
+    int width = 10;
+    int length = 5;
     Random random = new Random();
     Point snake = new Point(1, 1);
     Point apple = new Point(random.nextInt(width), random.nextInt(length));
@@ -53,11 +56,16 @@ public class Showcase implements GameActions {
         snakeList.add(snake);
         this.gameWindow.setColorAt(Color.green, 1, 1);
         apples();
-        this.gameWindow.startGameLoop(200);
+        this.gameWindow.startGameLoop(500);
     }
 
     // main function to start application
     public static void main(String[] args) {
+        OpcClient server = new OpcClient("localhost", 7890);
+        OpcDevice fadeCandy = server.addDevice();
+        PixelStrip strip1 = fadeCandy.addPixelStrip(0, 50);
+        System.out.println(server.getConfig());
+        strip1.setPixelColor(led(0, 0), makeColor(256, 0, 0));
         new Showcase();
     }
 
@@ -86,6 +94,7 @@ public class Showcase implements GameActions {
             playerDirection = Direction.DOWN;
         }
 
+
         System.out.println("Arrow: " + dir);
     }
 
@@ -99,6 +108,7 @@ public class Showcase implements GameActions {
     // The game loop is off by default, enable it with this.gameWindow.startGameLoop(<tickspeed>)
     @Override
     public void onGameLoopTick() {
+
         if (playerDirection == Direction.LEFT) {
             snake.x = snake.x - 1;
             snakeList.addFirst(new Point(snake.x, snake.y));
@@ -112,6 +122,8 @@ public class Showcase implements GameActions {
             snake.y = snake.y + 1;
             snakeList.addFirst(new Point(snake.x, snake.y));
         }
+
+        led(snake.x, snake.y);
 
         this.gameWindow.setAllColor(Color.WHITE);
 
@@ -127,7 +139,7 @@ public class Showcase implements GameActions {
         if (this.gameWindow.getFieldAt(snake.x, snake.y) == this.gameWindow.getFieldAt(apple.x, apple.y)) {
             this.gameWindow.setColorAt(Color.white, apple.x, apple.y);
             apples();
-        }else{
+        } else{
 
             if (!snakeList.isEmpty()) {
                 snakeList.removeLast();
@@ -135,7 +147,40 @@ public class Showcase implements GameActions {
 
         }
         }
+    static public int led(int x, int y){
+
+        int led = 0;
+
+        if (y == 0){
+            led = x + 40;
+        }
+        else if (y == 1){
+            led = 39 - x;
+        }
+        else if (y == 2){
+            led = x + 20;
+        }
+        else if (y == 3){
+            led = 19 - x;
+        }
+        else if (y == 4){
+            led = x;
+        }
+
+
+        return led;
+   }
+
+    final public static int makeColor(int red, int green, int blue) {
+        assert red >=0 && red <= 255;
+        assert green >=0 && green <= 255;
+        assert blue >=0 && red <= 255;
+        int r = red & 0x000000FF;
+        int g = green & 0x000000FF;
+        int b = blue & 0x000000FF;
+        return (r << 16) | (g << 8) | (b) ;
     }
+}
 
 
 
