@@ -1,0 +1,2 @@
+Open the folder "java-training-template" as IDEA Projekt. 
+Then under: Project Structure => Modules => Import Module => select "game-library" => Import from external Model + select Maven

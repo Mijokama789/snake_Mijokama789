@@ -14,246 +14,128 @@
  * is subject to license terms.
  *
  */
+
 package com.koerber.training.template;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
+import java.awt.*;
+import java.util.LinkedList;
 import java.util.Random;
 
 import com.koerber.training.windowframework.Direction;
 import com.koerber.training.windowframework.GameActions;
 import com.koerber.training.windowframework.GameWindow;
 import com.koerber.training.windowframework.MouseButton;
+
 /**
-//// * An example for the use of the GameWindow and the WindowFramework.
-//// * Your can adopt the functions and methods accordingly.
-//// *
-//// * @author simon_oelerich
-//// * @company Körber Pharma Software GmbH
-//// * @created 28.07.2021
-//// * @since windowframework 1.0
-//// */
+ * An example for the use of the GameWindow and the WindowFramework.
+ * Your can adopt the functions and methods accordingly.
+ *
+ * @author simon_oelerich
+ * @company Körber Pharma Software GmbH
+ * @created 28.07.2021
+ * @since windowframework 1.0
+ */
 public class Showcase implements GameActions {
 
     protected final GameWindow gameWindow;
-    Direction SnakeDirection;
-    int x = 15;
-    int y = 15;
-    int apfelX = 30;
-    int apfelY = 30;
-    int SiyeX = 30;
-    int SiyeY = 30;
-    List<int[]> snake = new ArrayList<>();
-    int pendingGrowth= 0;
-    int score = 0;
-    static int level = 300;
+    int width = 20;
+    int length = 30;
+    Random random = new Random();
+    Point snake = new Point(1, 1);
+    Point apple = new Point(random.nextInt(width), random.nextInt(length));
+    Direction playerDirection = Direction.DOWN;
+    LinkedList<Point> snakeList = new LinkedList<>();
 
     // entrypoint of application
     public Showcase() {
-        this.gameWindow = new GameWindow("Showcase", SiyeX, SiyeY, 20, Color.GRAY, this);
+        this.gameWindow = new GameWindow("Showcase", width, length, 20, Color.GRAY, this);
         this.gameWindow.setAllColor(Color.WHITE);
-        this.gameWindow.setColorAt(Color.GREEN, x,y);
-        apfelRandom();
-        snake.add(new int[]{x,y});
-        gameWindow.startGameLoop(level);
+        snakeList.add(snake);
+        this.gameWindow.setColorAt(Color.green, 1, 1);
+        apples();
+        this.gameWindow.startGameLoop(200);
     }
 
-  // main function to start application
+    // main function to start application
     public static void main(String[] args) {
         new Showcase();
     }
 
+    public void apples() {
+        apple = new Point(random.nextInt(width), random.nextInt(length));
+        this.gameWindow.setColorAt(Color.red, apple.x, apple.y);
+    }
+
+
+
     // draw red point where mouse left-clicked, a blue point for right click and a yellow point for middle click
     @Override
     public void onGridClicked(int x, int y, MouseButton mouseClick) {
-        if (mouseClick == MouseButton.LEFTCLICK) {
-            this.gameWindow.setColorAt(Color.RED, x, y);
-        } else if (mouseClick == MouseButton.MIDDLECLICK) {
-            this.gameWindow.setColorAt(Color.YELLOW, x, y);
-        } else {
-            this.gameWindow.setColorAt(Color.BLUE, x, y);
-        }
-        this.gameWindow.setText("Clicked at " + x + ", " + y + " with " + mouseClick);
     }
 
     // when arrow key is pressed
     @Override
     public void onArrowPressed(Direction dir) {
-        //System.out.println("Arrow: " + dir);
-        if (dir == Direction.RIGHT && SnakeDirection != Direction.LEFT) {
-            SnakeDirection = dir;
-        } if (dir == Direction.LEFT && SnakeDirection != Direction.RIGHT) {
-            SnakeDirection = dir;
-        } if (dir == Direction.UP && SnakeDirection != Direction.DOWN) {
-            SnakeDirection = dir;
-        } if (dir == Direction.DOWN && SnakeDirection != Direction.UP) {
-            SnakeDirection = dir;
+        if (dir == Direction.LEFT) {
+            playerDirection = Direction.LEFT;
+        } else if (dir == Direction.UP) {
+            playerDirection = Direction.UP;
+        } else if (dir == Direction.RIGHT) {
+            playerDirection = Direction.RIGHT;
+        } else if (dir == Direction.DOWN) {
+            playerDirection = Direction.DOWN;
         }
+
+        System.out.println("Arrow: " + dir);
     }
-    public  void createNewApfel(){
-        if (snake.get(0)[0] == apfelX && snake.get(0)[1] == apfelY) {
-            pendingGrowth++;
-            score++;
-            level = Math.max(50, level - 10);
-            System.out.println("Score " + score);
-            apfelRandom();
-            System.out.println(level);
-            gameWindow.stopGameLoop();
-            gameWindow.startGameLoop(level);
-        }
 
-    }
-    public void snakehead (){
-        if (SnakeDirection == Direction.RIGHT) {
-            if (snake.get(0)[0] != 29) {
-                System.out.println("Rechts");
-                int [] head = snake.get(0);
-                int newX = head[0]+1;
-                int newY = head[1];
-
-                int[] newHead = new int[]{newX,newY};
-                snake.add(0, newHead);
-
-                if (pendingGrowth > 0) {
-                    pendingGrowth--;
-                }else{
-                    snake.remove(snake.size() - 1);
-                }
-            }
-        }
-
-        if (SnakeDirection == Direction.LEFT) {
-            if (snake.get(0)[0] != 0) {
-                System.out.println("Left");
-                int [] head = snake.get(0);
-                int newX = head[0]-1;
-                int newY = head[1];
-
-                int[] newHead = new int[]{newX,newY};
-                snake.add(0, newHead);
-
-                if (pendingGrowth > 0) {
-                    pendingGrowth--;
-                }else{
-                    snake.remove(snake.size() - 1);
-                }
-            }
-        }
-        if (SnakeDirection == Direction.UP) {
-            if (snake.get(0)[1] != 0) {
-                System.out.println("up");
-                int [] head = snake.get(0);
-                int newX = head[0];
-                int newY = head[1]-1;
-
-                int[] newHead = new int[]{newX,newY};
-                snake.add(0, newHead);
-
-                if (pendingGrowth > 0) {
-                    pendingGrowth--;
-                }else{
-                    snake.remove(snake.size() - 1);
-                }
-            }
-        }
-        if (SnakeDirection == Direction.DOWN) {
-            if (snake.get(0)[1] != 29) {
-                System.out.println("Down");
-                int [] head = snake.get(0);
-                int newX = head[0];
-                int newY = head[1]+1;
-
-                int[] newHead = new int[]{newX,newY};
-                snake.add(0, newHead);
-
-                if (pendingGrowth > 0) {
-                    pendingGrowth--;
-                }else{
-                    snake.remove(snake.size() - 1);
-                }
-            }
-        }
+    // when mouse button is pressed
+    @Override
+    public void onMousePressed(MouseButton mouseClick) {
 
     }
 
+    // Repeats every game loop tick
+    // The game loop is off by default, enable it with this.gameWindow.startGameLoop(<tickspeed>)
     @Override
     public void onGameLoopTick() {
-        this.gameWindow.setAllColor(Color.WHITE);
-       snakeMove();
-       drawsSnake();
-       createNewApfel();
-       this.gameWindow.setColorAt(Color.RED, apfelX ,apfelY);
-//
-    }
+        if (playerDirection == Direction.LEFT) {
+            snake.x = snake.x - 1;
+            snakeList.addFirst(new Point(snake.x, snake.y));
+        } else if (playerDirection == Direction.UP) {
+            snake.y = snake.y - 1;
+            snakeList.addFirst(new Point(snake.x, snake.y));
+        } else if (playerDirection == Direction.RIGHT) {
+            snake.x = snake.x + 1;
+            snakeList.addFirst(new Point(snake.x, snake.y));
+        } else if (playerDirection == Direction.DOWN) {
+            snake.y = snake.y + 1;
+            snakeList.addFirst(new Point(snake.x, snake.y));
+        }
 
-    public void drawsSnake() {
-        for (int i = 0; i < snake.size(); i++) {
-            int[] blok = snake.get(i);
-            if (i == 0) {
-                this.gameWindow.setColorAt(Color.gray, blok[0] , blok[1]);
-            } else {
-                this.gameWindow.setColorAt(Color.green , blok[0] , blok[1]);
+        this.gameWindow.setAllColor(Color.WHITE);
+
+        this.gameWindow.setColorAt(Color.RED, apple.x, apple.y);
+
+
+        for (Point p : snakeList) {
+            this.gameWindow.setColorAt(Color.GREEN, p.x, p.y);
+        }
+
+
+        System.out.println(snakeList);
+        if (this.gameWindow.getFieldAt(snake.x, snake.y) == this.gameWindow.getFieldAt(apple.x, apple.y)) {
+            this.gameWindow.setColorAt(Color.white, apple.x, apple.y);
+            apples();
+        }else{
+
+            if (!snakeList.isEmpty()) {
+                snakeList.removeLast();
             }
 
         }
-    }
-
-
-
-
-    Random random = new Random();
-
-
-    public  void apfelRandom(){
-        Random random = new Random();
-        apfelX = new Random().nextInt(20);
-        apfelY = new Random().nextInt(20);
-        this.gameWindow.setColorAt(Color.RED, apfelX ,apfelY);
-    }
-    public void snakeMove() {
-        int[] currentHead = snake.get(0);
-        int newX = currentHead[0];
-        int newY = currentHead[1];
-
-        if (SnakeDirection == Direction.RIGHT) {
-            newX = (currentHead[0] + 1) % 30;
-
-        } else if (SnakeDirection == Direction.LEFT) {
-            newX = (currentHead[0] - 1 + 30) % 30;
-
-        } else if (SnakeDirection == Direction.UP ) {
-
-            newY = (currentHead[1] - 1 + SiyeY) % SiyeY;
-        } else if (SnakeDirection == Direction.DOWN ) {
-
-            newY = (currentHead[1] + 1) % SiyeY;
-        } else {
-            return;
-        }
-
-      for (int i = 0; i < snake.size(); i++) {
-          int[] segment = snake.get(i);
-          if (segment[0] == newX && segment[1] == newY) {
-              System.out.println("Game Over! Die Schlange hat sich selbst berührt.");
-              gameWindow.stopGameLoop();
-              return;
-          }
-      }
-
-
-        int[] newHead = new int[]{newX, newY};
-        snake.add(0, newHead);
-
-        if (pendingGrowth > 0) {
-            pendingGrowth--;
-        } else {
-            snake.remove(snake.size() - 1);
         }
     }
-}
-
-
 
 
 
