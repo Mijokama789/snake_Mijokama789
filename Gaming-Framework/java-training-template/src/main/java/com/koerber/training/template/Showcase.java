@@ -77,10 +77,9 @@ public class Showcase implements GameActions {
     }
 
     public void apples() {
-
-        //do {
+        do {
         apple = new Point(random.nextInt(width), random.nextInt(length));
-        //} while (snakeList.contains(apple));
+        } while (snakeList.contains(apple));
 
         this.gameWindow.setColorAt(Color.red, apple.x, apple.y);
         strip1.setPixelColor(led(apple.x, apple.y), makeColor(0, 255, 0));
@@ -126,50 +125,33 @@ public class Showcase implements GameActions {
                 snake.x = 9;
             } else {
                 snake.x--;
-
-                snakeList.addFirst(new Point(snake.x, snake.y));
             }
+                snakeList.addFirst(new Point(snake.x, snake.y));
         } else if (playerDirection == Direction.UP) {
             if (snake.y == 0) {
                 snake.y = 4;
             } else {
                 snake.y--;
-
-                snakeList.addFirst(new Point(snake.x, snake.y));
             }
+                snakeList.addFirst(new Point(snake.x, snake.y));
         } else if (playerDirection == Direction.RIGHT) {
             if (snake.x == 9) {
                 snake.x = 0;
             } else {
                 snake.x++;
-
-                snakeList.addFirst(new Point(snake.x, snake.y));
             }
+                snakeList.addFirst(new Point(snake.x, snake.y));
         } else if (playerDirection == Direction.DOWN) {
             if (snake.y == 4) {
                 snake.y = 0;
             } else {
                 snake.y++;
-
-                snakeList.addFirst(new Point(snake.x, snake.y));
             }
+                snakeList.addFirst(new Point(snake.x, snake.y));
         }
 
         //System.out.println(led(snake.x, snake.y));
 
-
-        this.gameWindow.setAllColor(Color.WHITE);
-        strip1.clear();
-
-        this.gameWindow.setColorAt(Color.RED, apple.x, apple.y);
-        strip1.setPixelColor(led(apple.x, apple.y), makeColor(0, 255, 0));
-        server.show();
-
-        for (Point p : snakeList) {
-            this.gameWindow.setColorAt(Color.GREEN, p.x, p.y);
-            strip1.setPixelColor(led(p.x, p.y), makeColor(139, 34, 34));
-            server.show();
-        }
 
 //        System.out.println(snakeList);
         if (this.gameWindow.getFieldAt(snake.x, snake.y) == this.gameWindow.getFieldAt(apple.x, apple.y)) {
@@ -182,18 +164,18 @@ public class Showcase implements GameActions {
                 snakeList.removeLast();
             }
         }
-//        this.gameWindow.setAllColor(Color.WHITE);
-//        strip1.clear();
-//
-//        this.gameWindow.setColorAt(Color.RED, apple.x, apple.y);
-//        strip1.setPixelColor(led(apple.x,apple.y), makeColor(0, 255, 0));
-//        server.show();
-//
-//        for (Point p : snakeList) {
-//            this.gameWindow.setColorAt(Color.GREEN, p.x, p.y);
-//            strip1.setPixelColor(led(p.x, p.y), makeColor( 139, 34, 34));
-//            server.show();
-//        }
+        this.gameWindow.setAllColor(Color.WHITE);
+        strip1.clear();
+
+        this.gameWindow.setColorAt(Color.RED, apple.x, apple.y);
+        strip1.setPixelColor(led(apple.x,apple.y), makeColor(0, 255, 0));
+        server.show();
+
+        for (Point p : snakeList) {
+            this.gameWindow.setColorAt(Color.GREEN, p.x, p.y);
+            strip1.setPixelColor(led(p.x, p.y), makeColor( 139, 34, 34));
+            server.show();
+        }
     }
 
     static public int led(int x, int y) {
